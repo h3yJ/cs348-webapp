@@ -100,15 +100,37 @@ const App = () => {
       </form>
 
       <h2>Champion List</h2>
-      <ul>
-        {champions.map((champion) => (
-          <li key={champion.champion_id}>
-            {champion.name} - {champion.class_type} - {champion.range_type} - {champion.resource} - {champion.release_date} - {champion.region}
-            <button onClick={() => handleEdit(champion)}>Edit</button>
-            <button onClick={() => handleDelete(champion.champion_id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Class Type</th>
+            <th>Range Type</th>
+            <th>Resource</th>
+            <th>Release Date</th>
+            <th>Region</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {champions.map((champion) => (
+            <tr key={champion.champion_id}>
+              <td>{champion.champion_id}</td>
+              <td>{champion.name}</td>
+              <td>{champion.class_type}</td>
+              <td>{champion.range_type}</td>
+              <td>{champion.resource}</td>
+              <td>{champion.release_date}</td>
+              <td>{champion.region}</td>
+              <td>
+                <button onClick={() => handleEdit(champion)}>Edit</button>
+                <button onClick={() => handleDelete(champion.champion_id)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
