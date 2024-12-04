@@ -71,5 +71,25 @@ def delete_champion(champion_id):
     db.session.commit()
     return jsonify({'message': 'Champion deleted successfully'})
 
+# Route to filter champions
+@app.route('/api/filter_champions', methods=['GET'])
+def filter_champions():
+    name = request.args.get('filter_name', '').strip()
+    class_type = request.args.get('filter_class', '').strip()
+    region = request.args.get('filter_region', '').strip()
+
+    query = Champion.query
+
+    if name:
+        query = query.filter(Champion.name.ilike(f'{name}%'))
+    if class_type:
+        query = query.filter(Champion.class_type == class_type)
+    if region:
+        query = query.filter(Champion.region == region)
+
+    filtered_champions = query.all()
+    return jsonify([champion.to_dict() for champion in filtered_champions])
+
+
 if __name__ == '__main__':
     app.run(port=8000, debug=True)

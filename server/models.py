@@ -17,6 +17,17 @@ class Champion(db.Model):
     abilities = db.relationship('Ability', backref='champion', lazy=True)
     stats = db.relationship('ChampionStats', backref='champion', lazy=True)
 
+    def to_dict(self):
+        return {
+            "champion_id": self.champion_id,
+            "name": self.name,
+            "class_type": self.class_type,
+            "range_type": self.range_type,
+            "resource": self.resource,
+            "release_date": self.release_date.strftime('%Y-%m-%d'),
+            "region": self.region,
+        }
+
 class Skin(db.Model):
     __tablename__ = 'skins'
 

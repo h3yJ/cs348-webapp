@@ -12,6 +12,7 @@ const App = () => {
     region: ''
   });
   const [editingId, setEditingId] = useState(null);
+  const [filterData, setFilterData] = useState({});
 
   useEffect(() => {
     fetchChampions();
@@ -86,18 +87,117 @@ const App = () => {
     fetchChampions();
   };
 
+  const fetchFilteredChampions = async () => {
+    const params = new URLSearchParams(filterData).toString();
+    const response = await fetch(`/api/filter_champions?${params}`);
+    const data = await response.json();
+    setChampions(data);
+  };
+
   return (
     <div>
       <h1>Champion Management</h1>
+      <h3>Add Champion</h3>
       <form onSubmit={handleSubmit}>
         <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
-        <input type="text" name="class_type" value={formData.class_type} onChange={handleChange} placeholder="Class Type" required />
+        <select name="class_type" value={formData.class_type} onChange={handleChange} required>
+          <option value="">Select Class Type</option>
+          <option value="Enchanter">Enchanter</option>
+          <option value="Catcher">Catcher</option>
+          <option value="Juggernaut">Juggernaut</option>
+          <option value="Diver">Diver</option>
+          <option value="Burst">Burst</option>
+          <option value="Battlemage">Battlemage</option>
+          <option value="Artillery">Artillery</option>
+          <option value="Marksman">Marksman</option>
+          <option value="Assassin">Assassin</option>
+          <option value="Skirmishers">Skirmishers</option>
+          <option value="Vanguard">Vanguard</option>
+          <option value="Warden">Warden</option>
+          <option value="Specialist">Specialist</option>
+        </select>
         <input type="text" name="range_type" value={formData.range_type} onChange={handleChange} placeholder="Range Type" required />
         <input type="text" name="resource" value={formData.resource} onChange={handleChange} placeholder="Resource" required />
         <input type="date" name="release_date" value={formData.release_date} onChange={handleChange} required />
-        <input type="text" name="region" value={formData.region} onChange={handleChange} placeholder="Region" required />
+        <select name="region" value={formData.region} onChange={handleChange} required>
+          <option value="">Select Region</option>
+          <option value="Bandle City">Bandle City</option>
+          <option value="Bilgewater">Bilgewater</option>
+          <option value="Demacia">Demacia</option>
+          <option value="Ionia">Ionia</option>
+          <option value="Ixtal">Ixtal</option>
+          <option value="Noxus">Noxus</option>
+          <option value="Piltover">Piltover</option>
+          <option value="Shadow Isles">Shadow Isles</option>
+          <option value="Shurima">Shurima</option>
+          <option value="Targon">Targon</option>
+          <option value="The Freljord">The Freljord</option>
+          <option value="The Void">The Void</option>
+          <option value="Zaun">Zaun</option>
+        </select>
         <button type="submit">{editingId ? 'Update Champion' : 'Add Champion'}</button>
       </form>
+
+      <h3>Filter Champions</h3>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          fetchFilteredChampions();
+        }}
+      >
+        <input
+          type="text"
+          name="filter_name"
+          placeholder="Filter by Name"
+          value={filterData.filter_name || ""}
+          onChange={(e) => setFilterData({ ...filterData, filter_name: e.target.value })}
+        />
+
+        <select
+          name="filter_class"
+          value={filterData.filter_class || ""}
+          onChange={(e) => setFilterData({ ...filterData, filter_class: e.target.value })}
+        >
+          <option value="">Filter by Class</option>
+          <option value="Enchanter">Enchanter</option>
+          <option value="Catcher">Catcher</option>
+          <option value="Juggernaut">Juggernaut</option>
+          <option value="Diver">Diver</option>
+          <option value="Burst">Burst</option>
+          <option value="Battlemage">Battlemage</option>
+          <option value="Artillery">Artillery</option>
+          <option value="Marksman">Marksman</option>
+          <option value="Assassin">Assassin</option>
+          <option value="Skirmishers">Skirmishers</option>
+          <option value="Vanguard">Vanguard</option>
+          <option value="Warden">Warden</option>
+          <option value="Specialist">Specialist</option>
+        </select>
+
+        <select
+          name="filter_region"
+          value={filterData.filter_region || ""}
+          onChange={(e) => setFilterData({ ...filterData, filter_region: e.target.value })}
+        >
+          <option value="">Filter by Region</option>
+          <option value="Bandle City">Bandle City</option>
+          <option value="Bilgewater">Bilgewater</option>
+          <option value="Demacia">Demacia</option>
+          <option value="Ionia">Ionia</option>
+          <option value="Ixtal">Ixtal</option>
+          <option value="Noxus">Noxus</option>
+          <option value="Piltover">Piltover</option>
+          <option value="Shadow Isles">Shadow Isles</option>
+          <option value="Shurima">Shurima</option>
+          <option value="Targon">Targon</option>
+          <option value="The Freljord">The Freljord</option>
+          <option value="The Void">The Void</option>
+          <option value="Zaun">Zaun</option>
+        </select>
+
+        <button type="submit">Apply Filters</button>
+      </form>
+
 
       <h2>Champion List</h2>
       <table>
